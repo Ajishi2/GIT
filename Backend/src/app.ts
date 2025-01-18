@@ -33,13 +33,11 @@ app.post('/api/users', async (req: Request, res: Response) => {
             return res.status(200).json(user);
         } else {
             // User does not exist, call the GitHub API
-
-            // Conditionally add the Authorization header if the token is available
-            const headers = GITHUB_TOKEN
-                ? { Authorization: `token ${GITHUB_TOKEN}` }
-                : {}; // No headers if token is not available
-
-            const response = await axios.get<GitHubUser>(`${GITHUB_API_URL}/${username}`, { headers });
+            const response = await axios.get<GitHubUser>(`${GITHUB_API_URL}/${username}`, {
+                headers: {
+                    Authorization: `token ${GITHUB_TOKEN}` // Use the GitHub token for authenticated requests
+                }
+            });
 
             // Create a new User object to save in the database
             user = new User();
@@ -56,13 +54,12 @@ app.post('/api/users', async (req: Request, res: Response) => {
             user.email = response.data.email ?? null;
             user.hireable = response.data.hireable ?? null;
             user.twitter_username = response.data.twitter_username ?? null;
-            user.avatar_url = response.data.avatar_url; // Save avatar URL to the database
 
             // Save the user to the database
             await userRepository.save(user);
         }
 
-        // Return the user data including the avatar URL
+        // Return the user data
         res.status(200).json(user);
     } catch (error) {
         console.error('Error processing request:', error);
