@@ -14,8 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const axios_1 = __importDefault(require("axios"));
-const sequelize_1 = require("sequelize");
-const database_1 = require("./database"); // Assuming you are using AppDataSource for TypeORM
+const database_1 = require("./database");
 const User_1 = require("./entity/User");
 const cors_1 = __importDefault(require("cors"));
 require("dotenv/config");
@@ -25,8 +24,6 @@ app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 const GITHUB_API_URL = 'https://api.github.com/users';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // Ensure your GitHub token is set in .env
-// Sequelize instance for MySQL connection
-const sequelize = new sequelize_1.Sequelize('mysql://root:ajishi@localhost:3306/github_friends');
 // POST: Create or fetch a user from the database
 app.post('/api/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d, _e, _f, _g, _h;
@@ -75,15 +72,75 @@ app.post('/api/users', (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(500).json({ message: 'Error processing request', error: error.message });
     }
 }));
-// Other routes...
+// GET: Get all users
+app.get('/api/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userRepository = database_1.AppDataSource.getRepository(User_1.User);
+        const users = yield userRepository.find();
+        res.status(200).json(users);
+    }
+    catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({ message: 'Error fetching users', error: error.message });
+    }
+}));
+// GET: Get a user by username
+app.get('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    try {
+        const userRepository = database_1.AppDataSource.getRepository(User_1.User);
+        const user = yield userRepository.findOne({ where: { username: id } });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json(user);
+    }
+    catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).json({ message: 'Error fetching user', error: error.message });
+    }
+}));
+// PUT: Update a user by username
+app.put('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const updatedData = req.body;
+    try {
+        const userRepository = database_1.AppDataSource.getRepository(User_1.User);
+        const user = yield userRepository.findOne({ where: { username: id } });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        // Update user properties
+        Object.assign(user, updatedData);
+        yield userRepository.save(user);
+        res.status(200).json(user);
+    }
+    catch (error) {
+        console.error('Error updating user:', error);
+        res.status(500).json({ message: 'Error updating user', error: error.message });
+    }
+}));
+// DELETE: Delete a user by username
+app.delete('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    try {
+        const userRepository = database_1.AppDataSource.getRepository(User_1.User);
+        const user = yield userRepository.findOne({ where: { username: id } });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        yield userRepository.remove(user);
+        res.status(204).send(); // No content to send back
+    }
+    catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).json({ message: 'Error deleting user', error: error.message });
+    }
+}));
 // Start the server
 const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Test the database connection
-        yield sequelize.authenticate();
-        console.log('Database connection established successfully.');
-        // Initialize AppDataSource for TypeORM (if used) or any other database setup you have
-        yield database_1.AppDataSource.initialize(); // If using TypeORM
+        yield database_1.AppDataSource.initialize(); // Ensure database connection is established before server starts
         app.listen(PORT, () => {
             console.log(`Server is running on http://localhost:${PORT}`);
         });
