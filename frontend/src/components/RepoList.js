@@ -1,49 +1,78 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 
 const RepoList = () => {
-  const { username } = useParams(); // Get 'username' from URL params
+  const { username } = useParams();
   const [repos, setRepos] = useState([]);
+  const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate(); // Hook for navigation
 
   useEffect(() => {
-    const fetchRepos = async () => {
+    const fetchUserAndRepos = async () => {
       try {
-        console.log("Fetching repositories for user:", username);
-        const response = await axios.get(`https://api.github.com/users/${username}/repos`);
-        console.log("Fetched Repositories:", response.data);
-        setRepos(response.data);
+        const userResponse = await axios.get(`https://api.github.com/users/${username}`);
+        setUser(userResponse.data);
+        const reposResponse = await axios.get(userResponse.data.repos_url);
+        setRepos(reposResponse.data);
       } catch (err) {
-        setError('Error fetching repositories');
+        console.error("Error fetching data:", err);
+        setError("An unexpected error occurred.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchRepos();
+    if (username) {
+      fetchUserAndRepos();
+    } else {
+      setError("Username is required.");
+      setLoading(false);
+    }
   }, [username]);
 
   return (
     <div>
-      <h3>Repositories for {username}</h3>
-      {error && <p>{error}</p>}
       {loading ? (
         <p>Loading...</p>
-      ) : repos.length > 0 ? (
-        <ul>
-          {repos.map((repo) => (
-            <li key={repo.id}>
-              <button onClick={() => navigate(`/repo-details/${username}/${repo.name}`)}>
-                {repo.name}
-              </button>
-            </li>
-          ))}
-        </ul>
+      ) : error ? (
+        <p>{error}</p>
       ) : (
-        <p>No repositories found.</p>
+        <>
+          {user && (
+            <div className="user-info">
+              <h2>{user.name || user.login}</h2>
+              <p>{user.bio || "No bio available."}</p>
+              <img
+                src={user.avatar_url}
+                alt={`${user.login}'s avatar`}
+                style={{ width: 100, borderRadius: '50%' }}
+              />
+              
+              {/* Add link to Followers page */}
+              <Link to={`/followers/${username}`} style={{ textDecoration: 'none', color: 'blue' }}>
+                <button>View Followers</button>
+              </Link>
+            </div>
+          )}
+
+          <h3>Repositories for {username}</h3>
+          {repos.length > 0 ? (
+            <ul>
+              {repos.map((repo) => (
+                <li key={repo.id}>
+                  <Link to={`/repo-details/${username}/${repo.name}`} style={{ textDecoration: 'none', color: 'blue' }}>
+                    <h4>{repo.name}</h4>
+                    <p>{repo.description ? repo.description : "No description available"}</p>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No repositories found for this user.</p>
+          )}
+        </>
       )}
     </div>
   );

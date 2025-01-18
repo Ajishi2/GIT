@@ -1,4 +1,3 @@
-// app.ts
 import express, { Request, Response } from 'express';
 import axios from 'axios';
 import { AppDataSource } from './database';
@@ -15,7 +14,7 @@ app.use(express.json());
 const GITHUB_API_URL = 'https://api.github.com/users';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // Ensure your GitHub token is set in .env
 
-// app.ts
+// POST: Create or fetch a user from the database
 app.post('/api/users', async (req: Request, res: Response) => {
     const { username } = req.body;
 
@@ -25,7 +24,7 @@ app.post('/api/users', async (req: Request, res: Response) => {
 
     try {
         const userRepository = AppDataSource.getRepository(User);
-        
+
         // Check if the user already exists in the database
         let user = await userRepository.findOne({ where: { username } });
 
@@ -34,11 +33,13 @@ app.post('/api/users', async (req: Request, res: Response) => {
             return res.status(200).json(user);
         } else {
             // User does not exist, call the GitHub API
-            const response = await axios.get<GitHubUser>(`${GITHUB_API_URL}/${username}`, {
-                headers: {
-                    Authorization: `token ${GITHUB_TOKEN}` // Use the GitHub token for authenticated requests
-                }
-            });
+
+            // Conditionally add the Authorization header if the token is available
+            const headers = GITHUB_TOKEN
+                ? { Authorization: `token ${GITHUB_TOKEN}` }
+                : {}; // No headers if token is not available
+
+            const response = await axios.get<GitHubUser>(`${GITHUB_API_URL}/${username}`, { headers });
 
             // Create a new User object to save in the database
             user = new User();
@@ -55,12 +56,13 @@ app.post('/api/users', async (req: Request, res: Response) => {
             user.email = response.data.email ?? null;
             user.hireable = response.data.hireable ?? null;
             user.twitter_username = response.data.twitter_username ?? null;
+            user.avatar_url = response.data.avatar_url; // Save avatar URL to the database
 
             // Save the user to the database
             await userRepository.save(user);
         }
 
-        // Return the user data
+        // Return the user data including the avatar URL
         res.status(200).json(user);
     } catch (error) {
         console.error('Error processing request:', error);
@@ -68,8 +70,7 @@ app.post('/api/users', async (req: Request, res: Response) => {
     }
 });
 
-
-// Get all users
+// GET: Get all users
 app.get('/api/users', async (req: Request, res: Response) => {
     try {
         const userRepository = AppDataSource.getRepository(User);
@@ -81,16 +82,16 @@ app.get('/api/users', async (req: Request, res: Response) => {
     }
 });
 
-// Get a user by ID
+// GET: Get a user by username
 app.get('/api/users/:id', async (req: Request, res: Response) => {
     const { id } = req.params;
 
     try {
         const userRepository = AppDataSource.getRepository(User);
-        const user = await userRepository.findOne({ where: { id: Number(id) } });
+        const user = await userRepository.findOne({ where: { username: id } });
 
         if (!user) {
-            return res.status(404).json({ message: 'User  not found' });
+            return res.status(404).json({ message: 'User not found' });
         }
 
         res.status(200).json(user);
@@ -100,17 +101,17 @@ app.get('/api/users/:id', async (req: Request, res: Response) => {
     }
 });
 
-// Update a user by ID
+// PUT: Update a user by username
 app.put('/api/users/:id', async (req: Request, res: Response) => {
     const { id } = req.params;
     const updatedData = req.body;
 
     try {
         const userRepository = AppDataSource.getRepository(User);
-        const user = await userRepository.findOne({ where: { id: Number(id) } });
+        const user = await userRepository.findOne({ where: { username: id } });
 
         if (!user) {
-            return res.status(404).json({ message: 'User  not found' });
+            return res.status(404).json({ message: 'User not found' });
         }
 
         // Update user properties
@@ -124,16 +125,16 @@ app.put('/api/users/:id', async (req: Request, res: Response) => {
     }
 });
 
-// Delete a user by ID
+// DELETE: Delete a user by username
 app.delete('/api/users/:id', async (req: Request, res: Response) => {
     const { id } = req.params;
 
     try {
         const userRepository = AppDataSource.getRepository(User);
-        const user = await userRepository.findOne({ where: { id: Number(id) } });
+        const user = await userRepository.findOne({ where: { username: id } });
 
         if (!user) {
-            return res.status(404).json({ message: 'User  not found' });
+            return res.status(404).json({ message: 'User not found' });
         }
 
         await userRepository.remove(user);
@@ -146,10 +147,14 @@ app.delete('/api/users/:id', async (req: Request, res: Response) => {
 
 // Start the server
 const startServer = async () => {
-    await AppDataSource.initialize(); // Ensure database connection is established before server starts
-    app.listen(PORT, () => {
-        console.log(`Server is running on http://localhost:${PORT}`);
-    });
+    try {
+        await AppDataSource.initialize(); // Ensure database connection is established before server starts
+        app.listen(PORT, () => {
+            console.log(`Server is running on http://localhost:${PORT}`);
+        });
+    } catch (error) {
+        console.error('Error starting the server:', error);
+    }
 };
 
 startServer();

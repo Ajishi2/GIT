@@ -1,55 +1,91 @@
 /* Ap.css */
 .Ap {
-    text-align: center;
-    font-family: Arial, sans-serif;
-    padding: 20px;
-  }
-  
-  input {
-    padding: 10px;
-    margin-right: 10px;
-  }
-  
-  button {
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  .user-profile {
-    margin-top: 20px;
-    text-align: left;
-  }
-  
-  .user-profile img {
-    width: 100px;
-    border-radius: 50%;
-  }
-  
-  .repo-list {
-    margin-top: 20px;
-    text-align: left;
-  }
-  
-  .repo-card {
-    background-color: #f9f9f9;
-    padding: 15px;
-    margin: 10px 0;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .repo-card h4 {
-    margin: 0;
-  }
-  
-  .repo-card p {
-    color: #555;
-  }
-  
+  text-align: center;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+input {
+  padding: 10px;
+  margin-right: 10px;
+}
+
+button {
+  padding: 15px;
+  background-color: rgba(33, 40, 48, 1);
+  color: white;
+  border: none;
+  cursor: pointer;
+ 
+  margin-bottom: 15px; /* Add space below the button */
+}
+
+
+
+.user-profile {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.user-profile img {
+  width: 100px;
+  border-radius: 50%;
+}
+
+.repo-list {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.repo-card {
+  background-color: #f9f9f9;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.repo-card h4 {
+  margin: 0;
+}
+
+.repo-card p {
+  color: #555;
+}
+
+.followers-info {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around; /* Distribute space evenly */
+  gap: 30px; /* Add gap between items */
+}
+
+.followers-info div {
+  text-align: center; /* Center the text */
+  padding: 10px; /* Add some padding to each section */
+  background-color: #f0f0f0; /* Light background for the sections */
+  border-radius: 8px; /* Rounded corners */
+}
+
+.followers-button {
+  background-color: #1b1e20;
+  color: white;
+  padding: 10px 15px;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-top: 20px; /* Increased top margin for more space above */
+  margin-bottom: 15px; /* Added bottom margin to create space below the button */
+  display: inline-block; /* Ensures the button stays inline */
+}
+
+a {
+  color: #cccfd3;
+  text-decoration: none;
+  cursor: pointer;
+  position: relative; /* Ensure it’s in the correct stacking context */
+  z-index: 1000; /* Put the link on top */
+}
+
+
+
+

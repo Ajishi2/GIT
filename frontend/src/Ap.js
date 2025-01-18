@@ -13,8 +13,7 @@ const Ap = () => {
         <Routes>
           <Route path="/" element={<UserSearch />} />
           <Route path="/repos/:username" element={<RepoList />} />
-          <Route path="/followers/:username" element={<FollowerList />} />
-          {/* Updated repo details route */}
+          <Route path="/followers/:username" element={<FollowerList />} /> {/* Followers Route */}
           <Route path="/repo-details/:username/:repoName" element={<RepoDetails />} />
         </Routes>
       </div>

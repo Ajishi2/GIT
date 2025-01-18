@@ -3,37 +3,46 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const RepoDetails = () => {
-  const { username, repoName } = useParams(); // Get 'username' and 'repoName' from URL params
-  const [repoDetails, setRepoDetails] = useState(null);
+  const { username, repoName } = useParams();  // Retrieve username and repo name from the URL
+  const [repo, setRepo] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchRepoDetails = async () => {
       try {
+        console.log(`Fetching details for repo: ${repoName} by ${username}`); // Debugging log
         const response = await axios.get(`https://api.github.com/repos/${username}/${repoName}`);
-        setRepoDetails(response.data); // Set the repo details in state
-      } catch (error) {
-        setError('Error fetching repository details');
-        console.error(error);
+        console.log(response.data);  // Log the full response
+        setRepo(response.data);
+      } catch (err) {
+        console.error("Error fetching repository details:", err);
+        setError(`An error occurred: ${err.message || err}`);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchRepoDetails(); // Fetch repo details when the component mounts
-  }, [username, repoName]); // Re-run the effect if the username or repoName changes
+    fetchRepoDetails();
+  }, [username, repoName]);
 
   return (
     <div>
-      {error && <p>{error}</p>}
-      {repoDetails ? (
-        <div>
-          <h3>{repoDetails.name}</h3>
-          <p>{repoDetails.description}</p>
-          <p><strong>Stars:</strong> {repoDetails.stargazers_count}</p>
-          <p><strong>Forks:</strong> {repoDetails.forks_count}</p>
-          {/* Display other repo details here */}
-        </div>
+      {loading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : repo ? (
+        <>
+          <h2>{repo.name}</h2>
+          <p><strong>Description:</strong> {repo.description || "No description available."}</p>
+          <p><strong>Stars:</strong> {repo.stargazers_count}</p>
+          <p><strong>Forks:</strong> {repo.forks_count}</p>
+          <p><strong>Language:</strong> {repo.language || "Not specified"}</p>
+          <a href={repo.html_url} target="_blank" rel="noopener noreferrer">View on GitHub</a>
+        </>
       ) : (
-        <p>Loading repository details...</p>
+        <p>Repository not found.</p>
       )}
     </div>
   );

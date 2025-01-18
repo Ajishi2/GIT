@@ -1,6 +1,4 @@
-// entity/User.ts
-
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Unique } from 'typeorm';
 
 export interface GitHubUser {
   login: string;
@@ -22,12 +20,13 @@ export interface GitHubUser {
 }
 
 @Entity()
+@Unique(["username"])  // Ensure username is unique
 export class User {
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Column({ type: 'varchar', length: 255 })
-  username!: string;
+  username!: string; // username will be unique
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   location?: string | null;
@@ -55,7 +54,7 @@ export class User {
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   name?: string | null;
-
+  
   @Column({ type: 'varchar', length: 255, nullable: true })
   company?: string | null;
 
@@ -64,6 +63,9 @@ export class User {
 
   @Column({ type: 'boolean', nullable: true })
   hireable?: boolean | null;
+
+  @Column({ nullable: true })
+  avatar_url?: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   twitter_username?: string | null;
