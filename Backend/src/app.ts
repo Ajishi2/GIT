@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import axios from 'axios';
-import { AppDataSource } from './database';
+import { Sequelize } from 'sequelize';
+import { AppDataSource } from './database'; // Assuming you are using AppDataSource for TypeORM
 import { User, GitHubUser } from './entity/User';
 import cors from 'cors';
 import 'dotenv/config';
@@ -13,6 +14,9 @@ app.use(express.json());
 
 const GITHUB_API_URL = 'https://api.github.com/users';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // Ensure your GitHub token is set in .env
+
+// Sequelize instance for MySQL connection
+const sequelize = new Sequelize('mysql://root:ajishi@localhost:3306/github_friends');
 
 // POST: Create or fetch a user from the database
 app.post('/api/users', async (req: Request, res: Response) => {
@@ -67,85 +71,18 @@ app.post('/api/users', async (req: Request, res: Response) => {
     }
 });
 
-// GET: Get all users
-app.get('/api/users', async (req: Request, res: Response) => {
-    try {
-        const userRepository = AppDataSource.getRepository(User);
-        const users = await userRepository.find();
-        res.status(200).json(users);
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        res.status(500).json({ message: 'Error fetching users', error: (error as Error).message });
-    }
-});
-
-// GET: Get a user by username
-app.get('/api/users/:id', async (req: Request, res: Response) => {
-    const { id } = req.params;
-
-    try {
-        const userRepository = AppDataSource.getRepository(User);
-        const user = await userRepository.findOne({ where: { username: id } });
-
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        res.status(200).json(user);
-    } catch (error) {
-        console.error('Error fetching user:', error);
-        res.status(500).json({ message: 'Error fetching user', error: (error as Error).message });
-    }
-});
-
-// PUT: Update a user by username
-app.put('/api/users/:id', async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const updatedData = req.body;
-
-    try {
-        const userRepository = AppDataSource.getRepository(User);
-        const user = await userRepository.findOne({ where: { username: id } });
-
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        // Update user properties
-        Object.assign(user, updatedData);
-        await userRepository.save(user);
-
-        res.status(200).json(user);
-    } catch (error) {
-        console.error('Error updating user:', error);
-        res.status(500).json({ message: 'Error updating user', error: (error as Error).message });
-    }
-});
-
-// DELETE: Delete a user by username
-app.delete('/api/users/:id', async (req: Request, res: Response) => {
-    const { id } = req.params;
-
-    try {
-        const userRepository = AppDataSource.getRepository(User);
-        const user = await userRepository.findOne({ where: { username: id } });
-
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        await userRepository.remove(user);
-        res.status(204).send(); // No content to send back
-    } catch (error) {
-        console.error('Error deleting user:', error);
-        res.status(500).json({ message: 'Error deleting user', error: (error as Error).message });
-    }
-});
+// Other routes...
 
 // Start the server
 const startServer = async () => {
     try {
-        await AppDataSource.initialize(); // Ensure database connection is established before server starts
+        // Test the database connection
+        await sequelize.authenticate();
+        console.log('Database connection established successfully.');
+
+        // Initialize AppDataSource for TypeORM (if used) or any other database setup you have
+        await AppDataSource.initialize(); // If using TypeORM
+        
         app.listen(PORT, () => {
             console.log(`Server is running on http://localhost:${PORT}`);
         });
