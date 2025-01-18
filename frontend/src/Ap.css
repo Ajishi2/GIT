@@ -1,0 +1,55 @@
+/* Ap.css */
+.Ap {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+  
+  input {
+    padding: 10px;
+    margin-right: 10px;
+  }
+  
+  button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  .user-profile {
+    margin-top: 20px;
+    text-align: left;
+  }
+  
+  .user-profile img {
+    width: 100px;
+    border-radius: 50%;
+  }
+  
+  .repo-list {
+    margin-top: 20px;
+    text-align: left;
+  }
+  
+  .repo-card {
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .repo-card h4 {
+    margin: 0;
+  }
+  
+  .repo-card p {
+    color: #555;
+  }
+  

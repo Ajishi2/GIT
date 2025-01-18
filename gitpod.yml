@@ -1,0 +1,11 @@
+image: gitpod/workspace-full
+
+tasks:
+  - init: npm install # Install backend dependencies (e.g., Express)
+  - command: npm start # Start the backend server on port 5000
+  - init: cd frontend && npm install # Install frontend dependencies (e.g., React)
+  - command: cd frontend && npm start # Start React app on port 3000
+
+ports:
+  - port: 3000 # React frontend
+  - port: 5001 # Express backend (changed from 4000 to 5000)
