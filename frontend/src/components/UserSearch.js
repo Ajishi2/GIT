@@ -9,9 +9,15 @@ const UserSearch = () => {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.post('http://localhost:5002/api/users', { username });
+      if (username.trim() === '') {
+        setError('Please enter a username');
+        return;
+      }
+
+      const response = await axios.get(`https://api.github.com/users/${username}`);
+
       if (response.data) {
-        navigate(`/repos/${response.data.id}`);
+        navigate(`/repos/${username}`);  // Make sure the username is passed to the URL
       }
     } catch (err) {
       console.error('Error fetching user:', err);

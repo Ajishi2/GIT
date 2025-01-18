@@ -12,9 +12,10 @@ const Ap = () => {
         <h1>GitHub User Explorer</h1>
         <Routes>
           <Route path="/" element={<UserSearch />} />
-          <Route path="/repos/:userId" element={<RepoList />} />
+          <Route path="/repos/:username" element={<RepoList />} />
           <Route path="/followers/:username" element={<FollowerList />} />
-          <Route path="/repo-details/:repoId" element={<RepoDetails />} />
+          {/* Updated repo details route */}
+          <Route path="/repo-details/:username/:repoName" element={<RepoDetails />} />
         </Routes>
       </div>
     </Router>

@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const RepoList = () => {
-  const { userId } = useParams();
+  const { username } = useParams(); // Get 'username' from URL params
   const [repos, setRepos] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // Hook for navigation
 
   useEffect(() => {
     const fetchRepos = async () => {
       try {
-        const response = await axios.get(`http://localhost:5002/api/repos/${userId}`);
+        console.log("Fetching repositories for user:", username);
+        const response = await axios.get(`https://api.github.com/users/${username}/repos`);
+        console.log("Fetched Repositories:", response.data);
         setRepos(response.data);
       } catch (err) {
         setError('Error fetching repositories');
@@ -21,11 +24,11 @@ const RepoList = () => {
     };
 
     fetchRepos();
-  }, [userId]);
+  }, [username]);
 
   return (
     <div>
-      <h3>Repositories</h3>
+      <h3>Repositories for {username}</h3>
       {error && <p>{error}</p>}
       {loading ? (
         <p>Loading...</p>
@@ -33,9 +36,9 @@ const RepoList = () => {
         <ul>
           {repos.map((repo) => (
             <li key={repo.id}>
-              <a href={repo.html_url} target="_blank" rel="noopener noreferrer">
+              <button onClick={() => navigate(`/repo-details/${username}/${repo.name}`)}>
                 {repo.name}
-              </a>
+              </button>
             </li>
           ))}
         </ul>
