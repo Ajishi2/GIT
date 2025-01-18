@@ -16,14 +16,13 @@ require("reflect-metadata");
 const express_1 = __importDefault(require("express"));
 const typeorm_1 = require("typeorm");
 const axios_1 = __importDefault(require("axios"));
-const database_1 = require("./database");
-const User_1 = require("./entity/User");
+const database_1 = require("./database"); // Ensure these are properly set up in the database.ts file
+const User_1 = require("./entity/User"); // Ensure the User entity is defined properly
 const cors_1 = __importDefault(require("cors"));
 require('dotenv').config();
 const app = (0, express_1.default)();
-const PORT = 6000;
+const PORT = 9001;
 app.use((0, cors_1.default)());
-// Add this line after initializing your Express app
 app.use(express_1.default.json());
 // Routes
 app.post('/api/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -87,20 +86,15 @@ app.get('/api/repos/:userId', (req, res) => __awaiter(void 0, void 0, void 0, fu
     }
     catch (error) {
         if (error instanceof Error) {
-            // Error object is typed correctly here
             console.error('Error fetching repositories:', error.message);
             res.status(500).json({ error: error.message });
         }
         else {
-            // Handle non-standard error objects
             console.error('Unknown error occurred:', error);
             res.status(500).json({ error: 'Unknown error occurred' });
         }
     }
 }));
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
 app.get('/api/users', (_, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userRepository = database_1.AppDataSource.getRepository(User_1.User);
     const users = yield userRepository.find();
@@ -174,7 +168,6 @@ app.get('/api/users/:username', (req, res) => __awaiter(void 0, void 0, void 0, 
         res.json(user); // Send the user data back
     }
     catch (err) {
-        // TypeScript now knows that `err` is of type `unknown`, so we need to handle it properly
         if (err instanceof Error) {
             res.status(500).json({ error: 'Database query failed', message: err.message });
         }
@@ -185,7 +178,7 @@ app.get('/api/users/:username', (req, res) => __awaiter(void 0, void 0, void 0, 
 }));
 // Start the server
 const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, database_1.connectDatabase)();
+    yield (0, database_1.connectDatabase)(); // Ensure database connection is established before server starts
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
     });
