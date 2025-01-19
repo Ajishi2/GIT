@@ -1,7 +1,7 @@
-import FollowingList from './components/FollowingList'; // Import the component
+import FollowingList from './components/FollowingList'; 
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Import routing components
-import UserSearch from './components/UserSearch'; // Correct path to your components
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; 
+import UserSearch from './components/UserSearch'; 
 import RepoList from './components/RepoList';
 import FollowerList from './components/FollowerList';
 import RepoDetails from './components/RepoDetails';
