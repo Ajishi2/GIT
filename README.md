@@ -1,5 +1,6 @@
 
 Project Overview
+
 This project is a GitHub User Explorer, a React-based web application that allows users to search for GitHub profiles and explore details such as repositories, 
 followers, and individual repository details. It uses react-router-dom for navigation and leverages GitHub's public API to fetch user data dynamically. 
 The project demonstrates key features like component-based architecture, API integration, and route management for an interactive and responsive user experience.
@@ -46,6 +47,8 @@ Deploy to GitHub Pages:
 If this project is configured for GitHub Pages:
 npm run deploy
 Deploy to a Hosting Service (e.g., Vercel, Netlify):
+
+https://git-kappa-pied.vercel.app/
 Sign up for a hosting service.
 Connect your GitHub repository to the service.
 Follow their UI to deploy the app directly from your GitHub repository.
