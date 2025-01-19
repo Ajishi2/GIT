@@ -2,36 +2,33 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const UserProfile = ({ userData }) => {
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate(); 
 
-  // Correct the avatar URL logic to use userData.login
   const avatarUrl = userData.avatar_url.startsWith('http')
     ? userData.avatar_url
     : `https://avatars.githubusercontent.com/${userData.login}`;
 
-  // Navigate to respective pages when clicked
   const handleNavigation = (path) => {
-    navigate(path); // Navigate to the corresponding page
+    navigate(path); 
   };
 
   return (
     <div>
       <h3>User Profile</h3>
-      {/* Display Avatar */}
+    
       {avatarUrl && (
         <img 
           src={avatarUrl} 
           alt={userData.login} 
           width="100" 
           height="100" 
-          style={{ borderRadius: '50%' }} // Add border-radius for rounded avatar
+          style={{ borderRadius: '50%' }} 
         />
       )}
       <p><strong>Username:</strong> {userData.login}</p>
       <p><strong>Location:</strong> {userData.location}</p>
       <p><strong>Bio:</strong> {userData.bio || "No bio available"}</p>
       
-      {/* Clickable sections for Followers, Following, and Repositories */}
       <div style={{ marginTop: '20px' }}>
         <button 
           onClick={() => handleNavigation(`/followers/${userData.login}`)}
