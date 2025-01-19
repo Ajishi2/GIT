@@ -39,11 +39,19 @@ const UserProfile = ({ userData }) => {
         >
           Followers: {userData.followers}
         </button>
-        <button 
-          onClick={() => handleNavigation(`/following/${userData.login}`)}
-          style={{ margin: '5px', padding: '10px 15px', backgroundColor: 'rgba(33, 40, 48, 1)', color: 'white', border: 'none', cursor: 'pointer', borderRadius: '5px' }}
-        >
-          Following: {userData.following}
+        <button
+  onClick={() => handleNavigation(`/following/${userData.login}`)}
+  style={{
+    margin: '5px',
+    padding: '10px 15px',
+    backgroundColor: 'rgba(33, 40, 48, 1)',
+    color: 'white',
+    border: 'none',
+    cursor: 'pointer',
+    borderRadius: '5px',
+  }}
+>
+  Following: {userData.following}
         </button>
         <button 
           onClick={() => handleNavigation(`/repos/${userData.login}`)}
