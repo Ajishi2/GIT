@@ -20,7 +20,7 @@ const cors_1 = __importDefault(require("cors"));
 require("dotenv/config");
 const database_2 = require("./database"); // Adjust the path if necessary
 const app = (0, express_1.default)();
-const PORT = 9001;
+const PORT = process.env.PORT || 9001;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 const GITHUB_API_URL = 'https://api.github.com/users';
