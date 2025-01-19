@@ -18,14 +18,14 @@ const database_1 = require("./database");
 const User_1 = require("./entity/User");
 const cors_1 = __importDefault(require("cors"));
 require("dotenv/config");
-const database_2 = require("./database"); // Adjust the path if necessary
+const database_2 = require("./database"); 
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 9001;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 const GITHUB_API_URL = 'https://api.github.com/users';
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // Ensure your GitHub token is set in .env
-// POST: Create or fetch a user from the database
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN; 
+
 app.post('/api/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d, _e, _f, _g, _h;
     const { username } = req.body;
@@ -34,20 +34,20 @@ app.post('/api/users', (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
     try {
         const userRepository = database_1.AppDataSource.getRepository(User_1.User);
-        // Check if the user already exists in the database
+        
         let user = yield userRepository.findOne({ where: { username } });
         if (user) {
-            // User already exists, return the existing data
+ 
             return res.status(200).json(user);
         }
         else {
-            // User does not exist, call the GitHub API
+           
             const response = yield axios_1.default.get(`${GITHUB_API_URL}/${username}`, {
                 headers: {
-                    Authorization: `token ${GITHUB_TOKEN}` // Use the GitHub token for authenticated requests
+                    Authorization: `token ${GITHUB_TOKEN}` 
                 }
             });
-            // Create a new User object to save in the database
+            
             user = new User_1.User();
             user.username = response.data.login;
             user.name = (_a = response.data.name) !== null && _a !== void 0 ? _a : null;
@@ -62,10 +62,10 @@ app.post('/api/users', (req, res) => __awaiter(void 0, void 0, void 0, function*
             user.email = (_f = response.data.email) !== null && _f !== void 0 ? _f : null;
             user.hireable = (_g = response.data.hireable) !== null && _g !== void 0 ? _g : null;
             user.twitter_username = (_h = response.data.twitter_username) !== null && _h !== void 0 ? _h : null;
-            // Save the user to the database
+            
             yield userRepository.save(user);
         }
-        // Return the user data
+     
         res.status(200).json(user);
     }
     catch (error) {
@@ -73,7 +73,7 @@ app.post('/api/users', (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(500).json({ message: 'Error processing request', error: error.message });
     }
 }));
-// GET: Get all users
+
 app.get('/api/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userRepository = database_1.AppDataSource.getRepository(User_1.User);
@@ -85,7 +85,7 @@ app.get('/api/users', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(500).json({ message: 'Error fetching users', error: error.message });
     }
 }));
-// GET: Get a user by username
+
 app.get('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
@@ -101,7 +101,7 @@ app.get('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, functi
         res.status(500).json({ message: 'Error fetching user', error: error.message });
     }
 }));
-// PUT: Update a user by username
+
 app.put('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const updatedData = req.body;
@@ -111,7 +111,7 @@ app.put('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, functi
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        // Update user properties
+        
         Object.assign(user, updatedData);
         yield userRepository.save(user);
         res.status(200).json(user);
@@ -121,7 +121,7 @@ app.put('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, functi
         res.status(500).json({ message: 'Error updating user', error: error.message });
     }
 }));
-// DELETE: Delete a user by username
+
 app.delete('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
@@ -131,18 +131,17 @@ app.delete('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, fun
             return res.status(404).json({ message: 'User not found' });
         }
         yield userRepository.remove(user);
-        res.status(204).send(); // No content to send back
+        res.status(204).send(); 
     }
     catch (error) {
         console.error('Error deleting user:', error);
         res.status(500).json({ message: 'Error deleting user', error: error.message });
     }
 }));
-// Start the server
-// Start the server
+
 const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield (0, database_2.connectDatabase)(); // Use connectDatabase to handle database initialization and logging
+        yield (0, database_2.connectDatabase)();
         app.listen(PORT, () => {
             console.log(`Server is running on http://localhost:${PORT}`);
         });
