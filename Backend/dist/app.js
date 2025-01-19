@@ -18,6 +18,7 @@ const database_1 = require("./database");
 const User_1 = require("./entity/User");
 const cors_1 = __importDefault(require("cors"));
 require("dotenv/config");
+const database_2 = require("./database"); // Adjust the path if necessary
 const app = (0, express_1.default)();
 const PORT = 9001;
 app.use((0, cors_1.default)());
@@ -138,9 +139,10 @@ app.delete('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
 }));
 // Start the server
+// Start the server
 const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield database_1.AppDataSource.initialize(); // Ensure database connection is established before server starts
+        yield (0, database_2.connectDatabase)(); // Use connectDatabase to handle database initialization and logging
         app.listen(PORT, () => {
             console.log(`Server is running on http://localhost:${PORT}`);
         });
