@@ -76,5 +76,5 @@ __decorate([
 ], User.prototype, "twitter_username", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)(),
-    (0, typeorm_1.Unique)(["username"]) // Ensure username is unique
+    (0, typeorm_1.Unique)(["username"]) 
 ], User);
