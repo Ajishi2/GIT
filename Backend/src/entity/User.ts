@@ -3,7 +3,7 @@ import { Entity, PrimaryGeneratedColumn, Column, Unique } from 'typeorm';
 export interface GitHubUser {
   login: string;
   id: number;
-  avatar_url: string;
+  
   html_url: string;
   name: string | null;
   location: string | null;
@@ -64,8 +64,7 @@ export class User {
   @Column({ type: 'boolean', nullable: true })
   hireable?: boolean | null;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  avatar_url?: string;  // Fixed indentation issue here
+// Fixed indentation issue here
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   twitter_username?: string | null;
