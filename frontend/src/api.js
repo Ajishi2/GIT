@@ -1,44 +1,43 @@
 import axios from 'axios';
 
-// Base URL for the GitHub API
+
 const BASE_URL = 'https://api.github.com/users';
 
-// Function to fetch user data
-export const fetchUserData = async (username) => { // Removed space in function name
+
+export const fetchUserData = async (username) => { 
     try {
         const response = await axios.get(`${BASE_URL}/${username}`);
-        return response.data; // Return the user data
+        return response.data;
     } catch (error) {
         console.error('Error fetching user data:', error);
-        throw error; // Rethrow the error for handling in the calling function
+        throw error; 
     }
 };
 
-// Function to fetch user repositories
-export const fetchUserRepositories = async (username) => { // Removed space in function name
+
+export const fetchUserRepositories = async (username) => {
     try {
         const response = await axios.get(`${BASE_URL}/${username}/repos`);
-        return response.data; // Return the repositories
+        return response.data; 
     } catch (error) {
         console.error('Error fetching user repositories:', error);
         throw error;
     }
 };
 
-// Function to fetch user followers
-export const fetchUserFollowers = async (username) => { // Removed space in function name
+
+export const fetchUserFollowers = async (username) => { 
     try {
         const response = await axios.get(`${BASE_URL}/${username}/followers`);
-        return response.data; // Return the followers
+        return response.data; 
     } catch (error) {
         console.error('Error fetching user followers:', error);
         throw error;
     }
 };
 
-// Function to fetch user friends (if applicable)
-// Note: GitHub does not have a "friends" concept, so this may not be applicable.
-export const fetchUserFriends = async (username) => { // Removed space in function name
+
+export const fetchUserFriends = async (username) => {
     // Placeholder for friends functionality
     return []; // Return an empty array or implement as needed
 };
