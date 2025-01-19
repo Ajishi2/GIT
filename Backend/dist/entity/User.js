@@ -71,10 +71,6 @@ __decorate([
     __metadata("design:type", Object)
 ], User.prototype, "hireable", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", Object)
-], User.prototype, "avatar_url", void 0);
-__decorate([
     (0, typeorm_1.Column)({ type: 'varchar', length: 255, nullable: true }),
     __metadata("design:type", Object)
 ], User.prototype, "twitter_username", void 0);
