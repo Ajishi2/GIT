@@ -4,6 +4,7 @@ import { AppDataSource } from './database';
 import { User, GitHubUser } from './entity/User';
 import cors from 'cors';
 import 'dotenv/config';
+import { connectDatabase } from './database'; // Adjust the path if necessary
 
 const app = express();
 const PORT = 9001;
@@ -143,9 +144,10 @@ app.delete('/api/users/:id', async (req: Request, res: Response) => {
 });
 
 // Start the server
+// Start the server
 const startServer = async () => {
     try {
-        await AppDataSource.initialize(); // Ensure database connection is established before server starts
+        await connectDatabase(); // Use connectDatabase to handle database initialization and logging
         app.listen(PORT, () => {
             console.log(`Server is running on http://localhost:${PORT}`);
         });
@@ -155,3 +157,4 @@ const startServer = async () => {
 };
 
 startServer();
+
