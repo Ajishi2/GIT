@@ -13,7 +13,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  entities: [User], // Specify your entities here
+  entities: [User ], // Specify your entities here
   logging: false, // Set to true for logging SQL queries
   synchronize: true, // Auto-create tables in development
 });
