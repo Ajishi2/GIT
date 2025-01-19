@@ -49,7 +49,4 @@ npm run deploy
 Deploy to a Hosting Service (e.g., Vercel, Netlify):
 
 https://git-kappa-pied.vercel.app/
-Sign up for a hosting service.
-Connect your GitHub repository to the service.
-Follow their UI to deploy the app directly from your GitHub repository.
-Your app will be live, and the hosting service will provide a URL for public access.
+
