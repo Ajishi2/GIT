@@ -1,7 +1,7 @@
 body {
     background-color: rgb(19, 19, 19);
-    color: white; /* Set text color to white for readability */
-    font-family: Arial, sans-serif; /* Set a basic font family */
+    color: white; 
+    font-family: Arial, sans-serif; 
     margin: 1000;
     padding: 0;
 }
