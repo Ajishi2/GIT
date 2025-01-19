@@ -8,22 +8,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.connectDatabase = exports.AppDataSource = void 0;
 const typeorm_1 = require("typeorm");
-const User_1 = require("./entity/User");
-// Adjust the import based on your file structure
+const User_1 = require("./entity/User"); // Adjust the import based on your file structure
+const dotenv_1 = __importDefault(require("dotenv"));
+// Load environment variables from .env file
+dotenv_1.default.config();
 // Create a DataSource instance
 exports.AppDataSource = new typeorm_1.DataSource({
-    type: 'mysql',
-    host: 'localhost',
-    port: 3306,
-    username: 'root', // Use 'root' as the username
-    password: 'ajishi', // Replace with your MySQL password
-    database: 'github_friends', // Replace with your database name
-    entities: [User_1.User],
-    logging: false, // Specify your entities here
-    synchronize: true, // Set to true for development to auto-create tables
+    type: process.env.DB_TYPE, // Ensure type is correct
+    host: process.env.DB_HOST,
+    port: parseInt(process.env.DB_PORT, 10),
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    entities: [User_1.User], // Specify your entities here
+    logging: false, // Set to true for logging SQL queries
+    synchronize: true, // Auto-create tables in development
 });
 // Function to connect to the database
 const connectDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -32,7 +37,14 @@ const connectDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
         console.log('Database connection established successfully.');
     }
     catch (error) {
-        console.error('Database connection error:', error);
+        if (error instanceof Error) {
+            // Now TypeScript knows that 'error' is an instance of Error
+            console.error('Database connection error:', error.message);
+        }
+        else {
+            // In case the error is not an instance of Error, you can log it as is
+            console.error('Unknown error occurred:', error);
+        }
     }
 });
 exports.connectDatabase = connectDatabase;

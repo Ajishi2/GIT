@@ -64,8 +64,8 @@ export class User {
   @Column({ type: 'boolean', nullable: true })
   hireable?: boolean | null;
 
-  @Column({ nullable: true })
-  avatar_url?: string | null;
+  @Column({ type: 'varchar', length: 255, nullable: true })
+avatar_url?: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   twitter_username?: string | null;
