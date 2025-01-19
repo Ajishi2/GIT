@@ -1,4 +1,4 @@
-/* Ap.css */
+
 .Ap {
   text-align: center;
   font-family: Arial, sans-serif;
@@ -17,7 +17,7 @@ button {
   border: none;
   cursor: pointer;
  
-  margin-bottom: 15px; /* Add space below the button */
+  margin-bottom: 15px;
 }
 
 
@@ -56,15 +56,15 @@ button {
 .followers-info {
   margin-top: 20px;
   display: flex;
-  justify-content: space-around; /* Distribute space evenly */
-  gap: 30px; /* Add gap between items */
+  justify-content: space-around; 
+  gap: 30px; 
 }
 
 .followers-info div {
-  text-align: center; /* Center the text */
-  padding: 10px; /* Add some padding to each section */
-  background-color: #f0f0f0; /* Light background for the sections */
-  border-radius: 8px; /* Rounded corners */
+  text-align: center; 
+  padding: 10px; 
+  background-color: #f0f0f0;
+  border-radius: 8px; 
 }
 
 .followers-button {
@@ -73,17 +73,17 @@ button {
   padding: 10px 15px;
   text-decoration: none;
   border-radius: 5px;
-  margin-top: 20px; /* Increased top margin for more space above */
-  margin-bottom: 15px; /* Added bottom margin to create space below the button */
-  display: inline-block; /* Ensures the button stays inline */
+  margin-top: 20px; 
+  margin-bottom: 15px;
+  display: inline-block; 
 }
 
 a {
   color: #cccfd3;
   text-decoration: none;
   cursor: pointer;
-  position: relative; /* Ensure it’s in the correct stacking context */
-  z-index: 1000; /* Put the link on top */
+  position: relative; 
+  z-index: 1000; 
 }
 
 
