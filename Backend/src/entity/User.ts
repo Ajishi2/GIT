@@ -20,13 +20,13 @@ export interface GitHubUser {
 }
 
 @Entity()
-@Unique(["username"])  // Ensure username is unique
+@Unique(["username"])  
 export class User {
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Column({ type: 'varchar', length: 255 })
-  username!: string; // username will be unique
+  username!: string; 
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   location?: string | null;
@@ -64,7 +64,7 @@ export class User {
   @Column({ type: 'boolean', nullable: true })
   hireable?: boolean | null;
 
-// Fixed indentation issue here
+
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   twitter_username?: string | null;
