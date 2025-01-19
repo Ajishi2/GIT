@@ -8,24 +8,17 @@ The project demonstrates key features like component-based architecture, API int
 Clone the Repository
 Open your terminal and run the following command to clone the GitHub repository:
 
-bash
-Copy
-Edit
+
 git clone https://github.com/username/repository-name.git
 Replace username and repository-name with the actual GitHub username and repository name.
 
 Navigate to the Project Directory
 
-bash
-Copy
-Edit
+
 cd repository-name
 Install Dependencies
 Ensure you have Node.js installed on your system. Then, install the required dependencies by running:
 
-bash
-Copy
-Edit
 npm install
 Set Up Environment Variables (Optional)
 If the project requires environment variables (e.g., GitHub API token), create a .env file in the root directory and add the required variables.
