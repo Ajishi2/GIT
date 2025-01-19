@@ -50,7 +50,6 @@ const RepoList = () => {
                 style={{ width: 100, borderRadius: '50%' }}
               />
               
-              {/* Add link to Followers page */}
               <Link to={`/followers/${username}`} style={{ textDecoration: 'none', color: 'blue' }}>
                 <button>View Followers</button>
               </Link>
