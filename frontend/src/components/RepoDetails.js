@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const RepoDetails = () => {
-  const { username, repoName } = useParams();  // Retrieve username and repo name from the URL
+  const { username, repoName } = useParams();  
   const [repo, setRepo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,9 +11,9 @@ const RepoDetails = () => {
   useEffect(() => {
     const fetchRepoDetails = async () => {
       try {
-        console.log(`Fetching details for repo: ${repoName} by ${username}`); // Debugging log
+        console.log(`Fetching details for repo: ${repoName} by ${username}`); 
         const response = await axios.get(`https://api.github.com/repos/${username}/${repoName}`);
-        console.log(response.data);  // Log the full response
+        console.log(response.data);  
         setRepo(response.data);
       } catch (err) {
         console.error("Error fetching repository details:", err);
