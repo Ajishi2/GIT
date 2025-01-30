@@ -5,6 +5,7 @@ import UserProfile from './components/UserProfile';
 import FollowerList from './components/FollowerList';
 import FollowingList from './components/FollowingList';
 import RepoList from './components/RepoList';
+import RepoDetails from './components/RepoDetails';
 
 const App = () => {
   return (
@@ -14,8 +15,21 @@ const App = () => {
       <Route path="/followers/:username" element={<FollowerList />} />
       <Route path="/following/:username" element={<FollowingList />} />
       <Route path="/repos/:username" element={<RepoList />} />
+      <Route path="/repos/:username/:repoName" element={<RepoDetails />} />
     </Routes>
   );
 };
 
 export default App; 
+          <Route path="/" element={<UserSearch />} />
+          <Route path="/repos/:username" element={<RepoList />} />
+          <Route path="/followers/:username" element={<FollowerList />} />
+          <Route path="/following/:username" element={<FollowingList />} /> {/* Following Route */}
+          <Route path="/repo-details/:username/:repoName" element={<RepoDetails />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+};
+
+export default Ap;
