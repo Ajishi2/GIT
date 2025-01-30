@@ -12,22 +12,30 @@ export const AppDataSource = new DataSource({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
-    synchronize: true,
-    logging: false,
+    synchronize: false,  // Set to false to preserve existing data
+    logging: true,
     entities: [User],
     migrations: [],
     subscribers: [],
+    extra: {
+        connectionLimit: 10,
+        charset: 'utf8mb4',
+        connectTimeout: 30000,
+        acquireTimeout: 30000,
+        timeout: 30000
+    }
 });
 
 export const connectDatabase = async () => {
-  try {
-    await AppDataSource.initialize();
-    console.log('Database connection established successfully.');
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error('Database connection error:', error.message);
-    } else {
-      console.error('Unknown error occurred:', error);
+    try {
+        await AppDataSource.initialize();
+        console.log('Database connection established successfully.');
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error('Database connection error:', error.message);
+        } else {
+            console.error('Unknown error occurred:', error);
+        }
+        process.exit(1);
     }
-  }
 };

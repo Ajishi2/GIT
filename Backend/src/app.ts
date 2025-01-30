@@ -4,70 +4,90 @@ import { AppDataSource } from './database';
 import { User, GitHubUser } from './entity/User';
 import cors from 'cors';
 import 'dotenv/config';
-import { connectDatabase } from './database'; 
+import { connectDatabase } from './database';
 
 const app = express();
 const PORT = process.env.PORT || 9001;
 
-app.use(cors());
+const GITHUB_API_URL = 'https://api.github.com/users';
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+
+// CORS configuration
+app.use(cors({
+    origin: ['http://localhost:3000', 'https://git-kappa-pied.vercel.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+}));
+
 app.use(express.json());
 
-const GITHUB_API_URL = 'https://api.github.com/users';
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN; 
-
-
-app.post('/api/users', async (req: Request, res: Response) => {
+// API Routes
+app.post('/api/users', async (req: Request, res: Response): Promise<void> => {
     const { username } = req.body;
 
     if (!username) {
-        return res.status(400).json({ message: 'Username is required' });
+        res.status(400).json({ message: 'Username is required' });
+        return;
     }
 
     try {
-        const userRepository = AppDataSource.getRepository(User);
+        const existingUser = await AppDataSource.getRepository(User).findOne({
+            where: { username }
+        });
 
-       
-        let user = await userRepository.findOne({ where: { username } });
-
-        if (user) {
-           
-            return res.status(200).json(user);
-        } else {
-            
-            const response = await axios.get<GitHubUser>(`${GITHUB_API_URL}/${username}`, {
-                headers: {
-                    Authorization: `token ${GITHUB_TOKEN}` 
-                }
-            });
-
-           
-            user = new User();
-            user.username = response.data.login;
-            user.name = response.data.name ?? null;
-            user.location = response.data.location ?? null;
-            user.blog = response.data.blog ?? null;
-            user.bio = response.data.bio ?? null;
-            user.followers = response.data.followers;
-            user.following = response.data.following;
-            user.public_repos = response.data.public_repos;
-            user.public_gists = response.data.public_gists;
-            user.company = response.data.company ?? null;
-            user.email = response.data.email ?? null;
-            user.hireable = response.data.hireable ?? null;
-            user.twitter_username = response.data.twitter_username ?? null;
-
-        
-            await userRepository.save(user);
+        if (existingUser) {
+            res.json(existingUser);
+            return;
         }
 
-      
-        res.status(200).json(user);
+        const response = await axios.get<GitHubUser>(`${GITHUB_API_URL}/${username}`, {
+            headers: {
+                Authorization: `token ${GITHUB_TOKEN}`
+            },
+            timeout: 30000
+        });
+
+        const user = new User();
+        const data = response.data;
+        
+        user.username = data.login;
+        user.name = data.name;
+        user.location = data.location;
+        user.blog = data.blog;
+        user.bio = data.bio;
+        user.followers = data.followers;
+        user.following = data.following;
+        user.public_repos = data.public_repos;
+        user.public_gists = data.public_gists;
+        user.avatar_url = data.avatar_url;
+        user.html_url = data.html_url;
+        user.company = data.company;
+        user.email = data.email;
+        user.hireable = data.hireable ?? false;
+        user.twitter_username = data.twitter_username;
+        user.isActive = true;
+
+        const savedUser = await AppDataSource.manager.save(User, user);
+        res.json(savedUser);
     } catch (error) {
         console.error('Error processing request:', error);
-        res.status(500).json({ message: 'Error processing request', error: (error as Error).message });
+        const err = error as { response?: { status?: number; data?: { message?: string } }; code?: string };
+        
+        if (err.code === 'ECONNABORTED') {
+            res.status(504).json({ message: 'Request timed out. Please try again.' });
+            return;
+        }
+        
+        if (err.response?.status === 404) {
+            res.status(404).json({ message: 'GitHub user not found' });
+            return;
+        }
+        
+        res.status(err.response?.status || 500).json({ 
+            message: err.response?.data?.message || 'Error processing request'
+        });
     }
 });
-
 
 app.get('/api/users', async (req: Request, res: Response) => {
     try {
@@ -120,7 +140,6 @@ app.put('/api/users/:id', async (req: Request, res: Response) => {
     }
 });
 
-
 app.delete('/api/users/:id', async (req: Request, res: Response) => {
     const { id } = req.params;
 
@@ -140,17 +159,19 @@ app.delete('/api/users/:id', async (req: Request, res: Response) => {
     }
 });
 
-
-const startServer = async () => {
+const startServer = async (): Promise<void> => {
     try {
-        await connectDatabase(); 
+        await connectDatabase();
         app.listen(PORT, () => {
             console.log(`Server is running on http://localhost:${PORT}`);
         });
     } catch (error) {
         console.error('Error starting the server:', error);
+        process.exit(1);
     }
 };
 
-startServer();
+void startServer();
+
+export default app;
 

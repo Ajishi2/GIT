@@ -18,62 +18,51 @@ const database_1 = require("./database");
 const User_1 = require("./entity/User");
 const cors_1 = __importDefault(require("cors"));
 require("dotenv/config");
-const database_2 = require("./database"); 
+const database_2 = require("./database");
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 9001;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 const GITHUB_API_URL = 'https://api.github.com/users';
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN; 
-
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 app.post('/api/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
+    var _a;
     const { username } = req.body;
     if (!username) {
         return res.status(400).json({ message: 'Username is required' });
     }
     try {
-        const userRepository = database_1.AppDataSource.getRepository(User_1.User);
-        
-        let user = yield userRepository.findOne({ where: { username } });
-        if (user) {
- 
-            return res.status(200).json(user);
-        }
-        else {
-           
-            const response = yield axios_1.default.get(`${GITHUB_API_URL}/${username}`, {
-                headers: {
-                    Authorization: `token ${GITHUB_TOKEN}` 
-                }
-            });
-            
-            user = new User_1.User();
-            user.username = response.data.login;
-            user.name = (_a = response.data.name) !== null && _a !== void 0 ? _a : null;
-            user.location = (_b = response.data.location) !== null && _b !== void 0 ? _b : null;
-            user.blog = (_c = response.data.blog) !== null && _c !== void 0 ? _c : null;
-            user.bio = (_d = response.data.bio) !== null && _d !== void 0 ? _d : null;
-            user.followers = response.data.followers;
-            user.following = response.data.following;
-            user.public_repos = response.data.public_repos;
-            user.public_gists = response.data.public_gists;
-            user.company = (_e = response.data.company) !== null && _e !== void 0 ? _e : null;
-            user.email = (_f = response.data.email) !== null && _f !== void 0 ? _f : null;
-            user.hireable = (_g = response.data.hireable) !== null && _g !== void 0 ? _g : null;
-            user.twitter_username = (_h = response.data.twitter_username) !== null && _h !== void 0 ? _h : null;
-            
-            yield userRepository.save(user);
-        }
-     
-        res.status(200).json(user);
+        const response = yield axios_1.default.get(`${GITHUB_API_URL}/${username}`, {
+            headers: {
+                Authorization: `token ${GITHUB_TOKEN}`
+            }
+        });
+        const user = new User_1.User();
+        const data = response.data;
+        user.username = data.login;
+        user.name = data.name;
+        user.location = data.location;
+        user.blog = data.blog;
+        user.bio = data.bio;
+        user.followers = data.followers;
+        user.following = data.following;
+        user.public_repos = data.public_repos;
+        user.public_gists = data.public_gists;
+        user.avatar_url = data.avatar_url;
+        user.html_url = data.html_url;
+        user.company = data.company;
+        user.email = data.email;
+        user.hireable = (_a = data.hireable) !== null && _a !== void 0 ? _a : false;
+        user.twitter_username = data.twitter_username;
+        user.isActive = true;
+        const savedUser = yield database_1.AppDataSource.manager.save(User_1.User, user);
+        res.json(savedUser);
     }
     catch (error) {
-        console.error('Error processing request:', error);
-        res.status(500).json({ message: 'Error processing request', error: error.message });
+        console.error('Error saving user:', error);
+        res.status(500).json({ message: 'Error saving user' });
     }
 }));
-
 app.get('/api/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userRepository = database_1.AppDataSource.getRepository(User_1.User);
@@ -85,7 +74,6 @@ app.get('/api/users', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(500).json({ message: 'Error fetching users', error: error.message });
     }
 }));
-
 app.get('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
@@ -101,7 +89,6 @@ app.get('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, functi
         res.status(500).json({ message: 'Error fetching user', error: error.message });
     }
 }));
-
 app.put('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const updatedData = req.body;
@@ -111,7 +98,6 @@ app.put('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, functi
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        
         Object.assign(user, updatedData);
         yield userRepository.save(user);
         res.status(200).json(user);
@@ -121,7 +107,6 @@ app.put('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, functi
         res.status(500).json({ message: 'Error updating user', error: error.message });
     }
 }));
-
 app.delete('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
@@ -131,14 +116,13 @@ app.delete('/api/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, fun
             return res.status(404).json({ message: 'User not found' });
         }
         yield userRepository.remove(user);
-        res.status(204).send(); 
+        res.status(204).send();
     }
     catch (error) {
         console.error('Error deleting user:', error);
         res.status(500).json({ message: 'Error deleting user', error: error.message });
     }
 }));
-
 const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield (0, database_2.connectDatabase)();
