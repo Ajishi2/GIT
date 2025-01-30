@@ -9,11 +9,10 @@
       "forceConsistentCasingInFileNames": true,
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,
-      "outDir": "dist"  // Output directory for compiled files
+      "outDir": "dist"  
   },
   "include": [
-      "src/**/*.ts",    // Include all .ts files in the src directory
-      "src/**/*.tsx"    // Include all .tsx files in the src directory
+      "src/**/*.ts",    
+      "src/**/*.tsx"    
   ],
-  "exclude": ["node_modules"]  // Exclude node_modules directory
-}
+  "exclude": ["node_modules"]  

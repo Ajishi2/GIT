@@ -3,7 +3,7 @@ import { Entity, PrimaryGeneratedColumn, Column, Unique } from 'typeorm';
 export interface GitHubUser {
   login: string;
   id: number;
-  avatar_url: string;
+  
   html_url: string;
   name: string | null;
   location: string | null;
@@ -20,13 +20,13 @@ export interface GitHubUser {
 }
 
 @Entity()
-@Unique(["username"])  // Ensure username is unique
+@Unique(["username"])  
 export class User {
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Column({ type: 'varchar', length: 255 })
-  username!: string; // username will be unique
+  username!: string; 
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   location?: string | null;
@@ -64,8 +64,12 @@ export class User {
   @Column({ type: 'boolean', nullable: true })
   hireable?: boolean | null;
 
+<<<<<<< HEAD
   @Column({ type: 'varchar', length: 255, nullable: true })
 avatar_url?: string;
+=======
+
+>>>>>>> 24510b2289bc057421d592636edc584bfa018e60
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   twitter_username?: string | null;

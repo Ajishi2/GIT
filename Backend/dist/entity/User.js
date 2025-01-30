@@ -71,14 +71,17 @@ __decorate([
     __metadata("design:type", Object)
 ], User.prototype, "hireable", void 0);
 __decorate([
+<<<<<<< HEAD
     (0, typeorm_1.Column)({ type: 'varchar', length: 255, nullable: true }),
     __metadata("design:type", String)
 ], User.prototype, "avatar_url", void 0);
 __decorate([
+=======
+>>>>>>> 24510b2289bc057421d592636edc584bfa018e60
     (0, typeorm_1.Column)({ type: 'varchar', length: 255, nullable: true }),
     __metadata("design:type", Object)
 ], User.prototype, "twitter_username", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)(),
-    (0, typeorm_1.Unique)(["username"]) // Ensure username is unique
+    (0, typeorm_1.Unique)(["username"]) 
 ], User);
