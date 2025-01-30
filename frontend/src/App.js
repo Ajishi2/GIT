@@ -20,16 +20,4 @@ const App = () => {
   );
 };
 
-export default App; 
-          <Route path="/" element={<UserSearch />} />
-          <Route path="/repos/:username" element={<RepoList />} />
-          <Route path="/followers/:username" element={<FollowerList />} />
-          <Route path="/following/:username" element={<FollowingList />} /> {/* Following Route */}
-          <Route path="/repo-details/:username/:repoName" element={<RepoDetails />} />
-        </Routes>
-      </div>
-    </Router>
-  );
-};
-
-export default Ap;
+export default App;
