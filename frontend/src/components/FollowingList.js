@@ -1,17 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import './FollowerList.css';  // We'll create this file next
+import './FollowingList.css';
 
-const FollowerList = () => {
+const FollowingList = () => {
   const { username } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Add a back button handler
+  useEffect(() => {
+    const fetchFollowing = async () => {
+      try {
+        const response = await axios.get(`https://api.github.com/users/${username}/following`);
+        setFollowing(response.data);
+      } catch (err) {
+        console.error("Error fetching following:", err);
+        setError("An error occurred while fetching following.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (username) {
+      fetchFollowing();
+    }
+  }, [username]);
+
   const handleBack = () => {
     if (location.state?.previousPath) {
       // If we have a previous path and it includes 'user', use it
@@ -27,29 +44,11 @@ const FollowerList = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchFollowers = async () => {
-      try {
-        const response = await axios.get(`https://api.github.com/users/${username}/followers`);
-        setFollowers(response.data);
-      } catch (err) {
-        console.error("Error fetching followers:", err);
-        setError("An error occurred while fetching followers.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (username) {
-      fetchFollowers();
-    }
-  }, [username]);
-
   if (loading) {
     return (
-      <div className="follower-container">
-        <div className="follower-header">
-          <h2>Loading followers...</h2>
+      <div className="following-container">
+        <div className="following-header">
+          <h2>Loading following...</h2>
         </div>
         <div className="loading-spinner"></div>
       </div>
@@ -58,8 +57,8 @@ const FollowerList = () => {
 
   if (error) {
     return (
-      <div className="follower-container">
-        <div className="follower-header">
+      <div className="following-container">
+        <div className="following-header">
           <h2>Error</h2>
         </div>
         <div className="error-message">{error}</div>
@@ -68,42 +67,42 @@ const FollowerList = () => {
   }
 
   return (
-    <div className="follower-container">
-      <div className="follower-header">
+    <div className="following-container">
+      <div className="following-header">
         <button onClick={handleBack} className="back-button">
           <svg className="octicon" viewBox="0 0 16 16" width="16" height="16">
             <path fillRule="evenodd" d="M7.78 12.53a.75.75 0 01-1.06 0L2.47 8.28a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 1.06L4.81 7h7.44a.75.75 0 010 1.5H4.81l2.97 2.97a.75.75 0 010 1.06z"></path>
           </svg>
           Back
         </button>
-        <h2>{followers.length} people following {username}</h2>
+        <h2>{username} follows {following.length} users</h2>
       </div>
       
-      {followers.length > 0 ? (
-        <div className="follower-list">
-          {followers.map((follower) => (
-            <div key={follower.id} className="follower-item">
-              <div className="follower-avatar">
-                <Link to={`/user/${follower.login}`}>
+      {following.length > 0 ? (
+        <div className="following-list">
+          {following.map((followedUser) => (
+            <div key={followedUser.id} className="following-item">
+              <div className="following-avatar">
+                <Link to={`/user/${followedUser.login}`}>
                   <img
-                    src={follower.avatar_url}
-                    alt={follower.login}
+                    src={followedUser.avatar_url}
+                    alt={followedUser.login}
                     width="50"
                     height="50"
                   />
                 </Link>
               </div>
-              <div className="follower-info">
-                <div className="follower-name-container">
-                  <Link to={`/user/${follower.login}`} className="follower-name">
-                    {follower.login}
+              <div className="following-info">
+                <div className="following-name-container">
+                  <Link to={`/user/${followedUser.login}`} className="following-name">
+                    {followedUser.login}
                   </Link>
                 </div>
-                {follower.bio && (
-                  <p className="follower-bio">{follower.bio}</p>
+                {followedUser.bio && (
+                  <p className="following-bio">{followedUser.bio}</p>
                 )}
               </div>
-              <div className="follower-action">
+              <div className="following-action">
                 <button className="follow-button">Follow</button>
               </div>
             </div>
@@ -111,11 +110,11 @@ const FollowerList = () => {
         </div>
       ) : (
         <div className="empty-state">
-          <p>This user doesn't have any followers yet.</p>
+          <p>This user isn't following anyone yet.</p>
         </div>
       )}
     </div>
   );
 };
 
-export default FollowerList;
+export default FollowingList;

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import UserProfile from './UserProfile'; // Correct import (no space)
 import axios from 'axios'; // Import axios for backend requests
 import './UserSearch.css'; 
+
 const UserSearch = () => {
     const [username, setUsername] = useState('');
     const [userData, setUserData] = useState(null); // Corrected state variable
@@ -46,7 +47,7 @@ const UserSearch = () => {
 
             // Automatically save user data to the backend
             try {
-                await axios.post('http://localhost:9001/api/users', userPayload); // Adjust the backend endpoint as needed
+                await axios.post('https://gitt-tw1s.onrender.com/api/users', userPayload); // Adjust the backend endpoint as needed
                 setSaveMessage('User data saved successfully!');
             } catch (saveError) {
                 setSaveMessage('Failed to save user data. Please try again.');
@@ -58,27 +59,47 @@ const UserSearch = () => {
     };
 
     return (
-        <div>
-            <form onSubmit={handleSearch}>
-                <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Enter GitHub username"
-                    required
-                />
-                <button type="submit">Search</button>
-            </form>
+        <div className="user-search-container">
+            <div className="search-header">
+                <h1>GitHub User Explorer</h1>
+                <p className="search-subtitle">Search and explore GitHub profiles</p>
+            </div>
 
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            <div className="search-section">
+                <form onSubmit={handleSearch} className="search-form">
+                    <div className="search-input-container">
+                        <div className="search-icon">
+                            <svg height="16" viewBox="0 0 16 16" width="16" className="search-icon-svg">
+                                <path fillRule="evenodd" d="M11.5 7a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm-.82 4.74a6 6 0 111.06-1.06l3.04 3.04a.75.75 0 11-1.06 1.06l-3.04-3.04z"></path>
+                            </svg>
+                        </div>
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Search GitHub username"
+                            className="search-input"
+                            required
+                        />
+                        <button type="submit" className="search-button">
+                            Search
+                        </button>
+                    </div>
+                </form>
+            </div>
 
-            {userData && (
-                <div>
-                    <UserProfile userData={userData} /> {/* Fixed import */}
+            {error && <div className="message-container error-message">{error}</div>}
+            {saveMessage && (
+                <div className={`message-container ${saveMessage.includes('success') ? 'success-message' : 'error-message'}`}>
+                    {saveMessage}
                 </div>
             )}
 
-            {saveMessage && <p>{saveMessage}</p>}
+            {userData && (
+                <div className="user-profile-container">
+                    <UserProfile userData={userData} />
+                </div>
+            )}
         </div>
     );
 };

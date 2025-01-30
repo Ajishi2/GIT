@@ -1,0 +1,137 @@
+.profile-container {
+    color: #c9d1d9;
+}
+
+.profile-header {
+    display: flex;
+    padding: 0 1rem 1rem;
+    gap: 1rem;
+}
+
+.profile-avatar-container {
+    flex-shrink: 0;
+    margin-top: -2rem;
+}
+
+.profile-avatar {
+    width: 296px;
+    height: 296px;
+    border-radius: 50%;
+    border: 1px solid #30363d;
+}
+
+.profile-info {
+    flex: 1;
+    padding-top: 1rem;
+}
+
+.profile-name {
+    font-size: 24px;
+    line-height: 1.25;
+    color: #c9d1d9;
+    font-weight: 600;
+    margin: 0;
+}
+
+.profile-login {
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 24px;
+    color: #8b949e;
+    margin: 0;
+}
+
+.profile-bio {
+    margin: 1rem 0;
+    font-size: 16px;
+    color: #c9d1d9;
+}
+
+.profile-location {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #8b949e;
+    font-size: 14px;
+    margin: 0.5rem 0;
+}
+
+.octicon {
+    fill: #8b949e;
+}
+
+.profile-nav {
+    border-bottom: 1px solid #21262d;
+    margin-bottom: 1rem;
+}
+
+.profile-nav-tabs {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0 1rem;
+    margin-bottom: -1px;
+}
+
+.nav-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 14px;
+    line-height: 30px;
+    color: #c9d1d9;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.nav-tab:hover {
+    border-bottom-color: #8b949e40;
+}
+
+.nav-tab:active {
+    border-bottom-color: #f78166;
+}
+
+.counter {
+    min-width: 20px;
+    padding: 0 6px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    text-align: center;
+    background-color: rgba(110, 118, 129, 0.4);
+    border: 1px solid transparent;
+    border-radius: 2em;
+    color: #c9d1d9;
+}
+
+@media (max-width: 768px) {
+    .profile-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-avatar-container {
+        margin-top: 0;
+    }
+
+    .profile-avatar {
+        width: 200px;
+        height: 200px;
+    }
+
+    .profile-location {
+        justify-content: center;
+    }
+
+    .profile-nav-tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+} 
