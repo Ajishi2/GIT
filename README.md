@@ -1,38 +1,87 @@
-
+GitHub User Explorer
 Project Overview
+This project consists of a full-stack application for exploring GitHub user data. It includes:
 
-This project is a GitHub User Explorer, a React-based web application that allows users to search for GitHub profiles and explore details such as repositories, 
-followers, and individual repository details. It uses react-router-dom for navigation and leverages GitHub's public API to fetch user data dynamically. 
-The project demonstrates key features like component-based architecture, API integration, and route management for an interactive and responsive user experience.
+A backend service built with Node.js, Express, and TypeScript that interacts with the GitHub API and stores user data
+A frontend React application that allows users to explore GitHub profiles, repositories, and follower networks
 
-Clone the Repository
-Open your terminal and run the following command to clone the GitHub repository:
+Backend Features
+
+Fetches and caches GitHub user data
+Identifies mutual followers and marks them as "friends"
+Provides search functionality by username, location, etc.
+Supports soft deletion of user records
+Allows updating of user profile information
+Supports sorting of user lists by various criteria
+
+Frontend Features
+
+Search interface for GitHub usernames
+User profile display with repository listings
+Detailed repository view
+Follower exploration with navigation between users
+Efficient caching to minimize GitHub API calls
+
+Tech Stack
+Backend
+
+Node.js
+Express.js
+TypeScript
+SQL Database (PostgreSQL recommended)
+Sequelize ORM
+
+Frontend
+
+React (with Hooks)
+Custom CSS (no frameworks)
+Context API for state management
+
+Getting Started
+Prerequisites
+
+Node.js (v14 or higher)
+npm or yarn
+PostgreSQL database
+
+Backend Setup
+
+Clone the repository
+bashCopygit clone https://github.com/yourusername/github-user-explorer.git
+cd github-user-explorer/backend
+
+Install dependencies
+bashCopynpm install
+
+Configure environment variables
+CopyDATABASE_URL=postgresql://username:password@localhost:5432/github_explorer
+PORT=3001
+
+Run database migrations
+bashCopynpm run migrate
+
+Start the development server
+bashCopynpm run dev
 
 
-git clone https://github.com/username/repository-name.git
-Replace username and repository-name with the actual GitHub username and repository name.
+Frontend Setup
 
-Navigate to the Project Directory
+Navigate to the frontend directory
+bashCopycd ../frontend
+
+Install dependencies
+bashCopynpm install
+
+Configure environment variables
+CopyREACT_APP_API_URL=http://localhost:3001/api
+
+Start the development server
+bashCopynpm start
 
 
-cd repository-name
-Install Dependencies
-Ensure you have Node.js installed on your system. Then, install the required dependencies by running:
-
-npm install
-Set Up Environment Variables (Optional)
-If the project requires environment variables (e.g., GitHub API token), create a .env file in the root directory and add the required variables.
-
-Start the Development Server
-Run the following command to start the development server locally:
-npm start
-Open http://localhost:9000 in your browser to view the app.
-
-Build for Production (Optional)
-To create a production-ready build of the app, run:
-
-npm run build
-This generates a build folder containing static files for deployment.
+API Endpoints
+EndpointMethodDescription/api/users/:usernameGETGet user details (fetches from GitHub if not in DB)/api/users/:username/friendsGETGet mutual followers (friends) for a user/api/users/searchGETSearch users by criteria/api/users/:usernameDELETESoft delete a user record/api/users/:usernamePATCHUpdate user information/api/usersGETGet all users with sorting options
+Project Structure
 
 Deploy the Application
 
