@@ -28,7 +28,7 @@ Backend
 Node.js
 Express.js
 TypeScript
-SQL Database (PostgreSQL recommended)
+SQL Database (PostgreSQL)
 Sequelize ORM
 
 Frontend
